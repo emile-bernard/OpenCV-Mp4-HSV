@@ -59,27 +59,18 @@ class App(tk.Frame):
 
         frame = cv2.bitwise_and(frame, frame, mask = mask)
 
-        # countour features
-        # ret, thresh = cv2.threshold(frame, 127, 255, 0)
-        # contours, hierarchy = cv2.findContours(thresh, 1, 2)
-        #
-        # cnt = contours[0]
-        #
-        # epsilon = 0.1 * cv2.arcLength(cnt, True)
-        # approx = cv2.approxPolyDP(cnt, epsilon, True)
-
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        blur = cv2.GaussianBlur(gray,(5,5),0)
-        ret, thresh_img = cv2.threshold(blur,91,255,cv2.THRESH_BINARY)
-        contours =  cv2.findContours(thresh_img,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)[-2]
-        for c in contours:
-            cv2.drawContours(frame, [c], -1, (0,255,0), 3)
-
-
-
+        #contour features
+        self.drawContours(frame)
 
         self.maskCanvasPhoto = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
         self.maskCanvas.createImage(0, 0, self.maskCanvasPhoto, tk.NW)
+
+    def drawContours(self, frame):
+        grayImg = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        retValue, threshImg = cv2.threshold(grayImg, 91, 255, cv2.THRESH_BINARY)
+        contours =  cv2.findContours(threshImg,cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[-2]
+        for c in contours:
+            cv2.drawContours(frame, [c], 0, (255,0,0), 2)
 
 if __name__ == "__main__":
     root = tk.Tk()
