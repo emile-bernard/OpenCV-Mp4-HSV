@@ -6,7 +6,7 @@ class Canvas:
         self.draw()
 
     def draw(self):
-        self.canvas.pack(side="left")
+        self.canvas.pack(side = "left")
 
     def createImage(self, x, y, image, anchor):
         self.canvas.create_image(x, y, image = image, anchor = anchor)

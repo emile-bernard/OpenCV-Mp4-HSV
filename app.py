@@ -57,7 +57,26 @@ class App(tk.Frame):
         higher_hsv = np.array([highHue, highSaturation, highValue])
         mask = cv2.inRange(hsv, lower_hsv, higher_hsv)
 
-        frame = cv2.bitwise_and(frame, frame, mask=mask)
+        frame = cv2.bitwise_and(frame, frame, mask = mask)
+
+        # countour features
+        # ret, thresh = cv2.threshold(frame, 127, 255, 0)
+        # contours, hierarchy = cv2.findContours(thresh, 1, 2)
+        #
+        # cnt = contours[0]
+        #
+        # epsilon = 0.1 * cv2.arcLength(cnt, True)
+        # approx = cv2.approxPolyDP(cnt, epsilon, True)
+
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        blur = cv2.GaussianBlur(gray,(5,5),0)
+        ret, thresh_img = cv2.threshold(blur,91,255,cv2.THRESH_BINARY)
+        contours =  cv2.findContours(thresh_img,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)[-2]
+        for c in contours:
+            cv2.drawContours(frame, [c], -1, (0,255,0), 3)
+
+
+
 
         self.maskCanvasPhoto = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
         self.maskCanvas.createImage(0, 0, self.maskCanvasPhoto, tk.NW)
