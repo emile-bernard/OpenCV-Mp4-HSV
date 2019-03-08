@@ -11,6 +11,9 @@ from slider import Slider
 class App(tk.Frame):
     UPDATE_DELAY = 15
 
+    BRIGHT_RGB = cv2.COLOR_BGR2RGB
+    BRIGHT_HSV = cv2.COLOR_BGR2HSV
+
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         self.parent = parent
@@ -27,39 +30,37 @@ class App(tk.Frame):
         self.lowValueSlider = Slider(self.parent, "Low Value", 20, 0, 255)
         self.highValueSlider = Slider(self.parent, "High Value", 255, 0, 255)
 
-        self.update()
+        self.updateFrame()
 
-    def update(self):
-        brightRGB = cv2.COLOR_BGR2RGB
-        brightLAB = cv2.COLOR_BGR2LAB
-        brightHSV = cv2.COLOR_BGR2HSV
-        brightYCB = cv2.COLOR_BGR2YCrCb
-
-        isFrameRead, frame = self.defaultVideoCapture.getFrame(brightRGB)
+    def updateFrame(self):
+        isFrameRead, frame = self.defaultVideoCapture.getFrame(self.BRIGHT_RGB)
         if isFrameRead:
             self.webcamCanvasPhoto = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
             self.webcamCanvas.createImage(0, 0, self.webcamCanvasPhoto, tk.NW)
 
-            isMaskFrameRead, maskFrame = self.defaultVideoCapture.getFrame(brightHSV)
+            self.updateMask(frame)
+        self.parent.after(self.UPDATE_DELAY, self.updateFrame)
 
-            # get sliders positions
-            lowHue = self.lowHueSlider.getValue()
-            highHue = self.highHueSlider.getValue()
-            lowSaturation = self.lowSaturationSlider.getValue()
-            highSaturation = self.highSaturationSlider.getValue()
-            lowValue = self.lowValueSlider.getValue()
-            highValue = self.highValueSlider.getValue()
+    def updateMask(self, frame):
+        isMaskFrameRead, maskFrame = self.defaultVideoCapture.getFrame(self.BRIGHT_HSV)
 
-            hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-            lower_hsv = np.array([lowHue, lowSaturation, lowValue])
-            higher_hsv = np.array([highHue, highSaturation, highValue])
-            mask = cv2.inRange(hsv, lower_hsv, higher_hsv)
+        # get sliders positions
+        lowHue = self.lowHueSlider.getValue()
+        highHue = self.highHueSlider.getValue()
+        lowSaturation = self.lowSaturationSlider.getValue()
+        highSaturation = self.highSaturationSlider.getValue()
+        lowValue = self.lowValueSlider.getValue()
+        highValue = self.highValueSlider.getValue()
 
-            frame = cv2.bitwise_and(frame, frame, mask=mask)
+        hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+        lower_hsv = np.array([lowHue, lowSaturation, lowValue])
+        higher_hsv = np.array([highHue, highSaturation, highValue])
+        mask = cv2.inRange(hsv, lower_hsv, higher_hsv)
 
-            self.maskCanvasPhoto = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
-            self.maskCanvas.createImage(0, 0, self.maskCanvasPhoto, tk.NW)
-        self.parent.after(self.UPDATE_DELAY, self.update)
+        frame = cv2.bitwise_and(frame, frame, mask=mask)
+
+        self.maskCanvasPhoto = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
+        self.maskCanvas.createImage(0, 0, self.maskCanvasPhoto, tk.NW)
 
 if __name__ == "__main__":
     root = tk.Tk()
