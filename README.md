@@ -1,5 +1,5 @@
 # OpenCV-Mp4-HSV
-This project contains a basic python script to run opencv-python with an HSV mask applied to a webcam stream.
+This project contains a basic python script to run opencv-python with an HSV mask applied to a webcam stream. Also, it uses the opencv contours methods to draw contours on the HVS mask.
 
 ## Previews
 ![Preview1](./preview/Preview1.PNG?raw=true "Preview1")

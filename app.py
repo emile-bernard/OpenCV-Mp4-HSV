@@ -44,7 +44,6 @@ class App(tk.Frame):
     def updateMask(self, frame):
         isMaskFrameRead, maskFrame = self.defaultVideoCapture.getFrame(self.BRIGHT_HSV)
 
-        # get sliders positions
         lowHue = self.lowHueSlider.getValue()
         highHue = self.highHueSlider.getValue()
         lowSaturation = self.lowSaturationSlider.getValue()
@@ -52,9 +51,10 @@ class App(tk.Frame):
         lowValue = self.lowValueSlider.getValue()
         highValue = self.highValueSlider.getValue()
 
-        hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
         lower_hsv = np.array([lowHue, lowSaturation, lowValue])
         higher_hsv = np.array([highHue, highSaturation, highValue])
+
+        hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
         mask = cv2.inRange(hsv, lower_hsv, higher_hsv)
 
         frame = cv2.bitwise_and(frame, frame, mask = mask)
