@@ -2,6 +2,7 @@
 This project contains a basic python script to run opencv-python with an HSV mask applied to a webcam stream.
 
 ## Previews
+![Preview1](./preview/preview1.PNG?raw=true "Preview1")
 
 ## How it work's
 

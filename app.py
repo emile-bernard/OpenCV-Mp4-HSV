@@ -20,12 +20,12 @@ class App(tk.Frame):
         self.webcamCanvas = Canvas(self.parent, self.defaultVideoCapture)
         self.maskCanvas = Canvas(self.parent, self.defaultVideoCapture)
 
-        self.lowHueSlider = Slider(self.parent, "Low Hue", 0)
-        self.highHueSlider = Slider(self.parent, "High Hue", 226)
-        self.lowSaturationSlider = Slider(self.parent, "Low Saturation", 0)
-        self.highSaturationSlider = Slider(self.parent, "High Saturation", 245)
-        self.lowValueSlider = Slider(self.parent, "Low Value", 162)
-        self.highValueSlider = Slider(self.parent, "High Value", 207)
+        self.lowHueSlider = Slider(self.parent, "Low Hue", 10, 0, 180)
+        self.highHueSlider = Slider(self.parent, "High Hue", 25, 0, 180)
+        self.lowSaturationSlider = Slider(self.parent, "Low Saturation", 100, 0, 255)
+        self.highSaturationSlider = Slider(self.parent, "High Saturation", 255, 0, 255)
+        self.lowValueSlider = Slider(self.parent, "Low Value", 20, 0, 255)
+        self.highValueSlider = Slider(self.parent, "High Value", 255, 0, 255)
 
         self.update()
 

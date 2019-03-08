@@ -1,11 +1,11 @@
 import tkinter as tk
 
 class Slider:
-    def __init__(self, parent, text, defaultValue):
+    def __init__(self, parent, text, defaultValue, lowerBound, upperBound):
         self.label = tk.Label(parent, text = text)
 
         self.value = tk.DoubleVar()
-        self.slider = tk.Scale(parent, variable = self.value, from_ = 0, to = 256, resolution = 1, orient = "horizontal")
+        self.slider = tk.Scale(parent, variable = self.value, from_ = lowerBound, to = upperBound, resolution = 1, orient = "horizontal")
         self.slider.bind("<ButtonRelease-1>", self.selectionChanged)
 
         self.value.set(defaultValue)
