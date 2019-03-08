@@ -5,6 +5,13 @@ This project contains a basic python script to run opencv-python with an HSV mas
 
 ## How it work's
 
+The HSV color space components:
+  H – Hue ( Dominant Wavelength ).
+  S – Saturation ( Purity / shades of the color ).
+  V – Value ( Intensity ).
+
+In the HSV color space only the Hue (H) channel describes color.
+
 ## How to setup
 - Install opencv-python
 ```
@@ -40,3 +47,4 @@ $ python ./app.py
 - [Tkinter layout management](https://www.python-course.eu/tkinter_layout_management.php)
 - [Python gui tkinter](https://www.geeksforgeeks.org/python-gui-tkinter/)
 - [Color spaces in opencv](https://www.learnopencv.com/color-spaces-in-opencv-cpp-python/)
+- [HSV color picker](https://alloyui.com/examples/color-picker/hsv)
