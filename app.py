@@ -36,8 +36,8 @@ class App(tk.Frame):
 
         self.button = tk.Button(self.parent,
                    text="Get histogram",
-                   fg="blue",
-                   command=self.drawHSVHHistogram)
+                   fg="blue")
+        self.button.bind("<Button-1>", self.drawHSVHHistogram)
         self.button.pack(anchor = tk.CENTER)
 
         self.updateFrame()
@@ -50,8 +50,8 @@ class App(tk.Frame):
             self.updateMask(frame)
         self.parent.after(self.UPDATE_DELAY, self.updateFrame)
 
-    def drawHSVHHistogram(self):
-        isFrameRead, frame = self.defaultVideoCapture.getFrame(self.BRIGHT_RGB)
+    def drawHSVHHistogram(self, event):
+        isFrameRead, frame = self.defaultVideoCapture.getFrame(cv2.COLOR_BGR2RGB)
         if isFrameRead:
             pixelColors = frame.reshape((np.shape(frame)[0]*np.shape(frame)[1], 3))
             norm = colors.Normalize(vmin=-1.,vmax=1.)
