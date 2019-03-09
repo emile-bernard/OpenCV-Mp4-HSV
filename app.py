@@ -34,11 +34,8 @@ class App(tk.Frame):
         self.lowValueSlider = Slider(self.parent, "Low Value", 20, 0, 255)
         self.highValueSlider = Slider(self.parent, "High Value", 255, 0, 255)
 
-        self.button = tk.Button(self.parent,
-                   text="Get histogram",
-                   fg="blue")
-        self.button.bind("<Button-1>", self.drawHSVHHistogram)
-        self.button.pack(anchor = tk.CENTER)
+        self.button = tk.Button(self.parent, text="Get histogram", fg="blue", command=self.drawHSVHHistogram)
+        self.button.pack(anchor=tk.CENTER)
 
         self.updateFrame()
 
@@ -50,48 +47,48 @@ class App(tk.Frame):
             self.updateMask(frame)
         self.parent.after(self.UPDATE_DELAY, self.updateFrame)
 
-    def drawHSVHHistogram(self, event):
-        isFrameRead, frame = self.defaultVideoCapture.getFrame(cv2.COLOR_BGR2RGB)
-        if isFrameRead:
-            pixelColors = frame.reshape((np.shape(frame)[0]*np.shape(frame)[1], 3))
-            norm = colors.Normalize(vmin=-1.,vmax=1.)
-            norm.autoscale(pixelColors)
-            pixel_colors = norm(pixelColors).tolist()
-            hsvFrame = cv2.cvtColor(frame, cv2.COLOR_RGB2HSV)
-            h, s, v = cv2.split(hsvFrame)
-            fig = plt.figure()
+    def drawHSVHHistogram(self):
+        isFrameRead, frame = self.defaultVideoCapture.getFrame(self.BRIGHT_RGB)
 
-            axis = fig.add_subplot(1, 1, 1, projection = "3d")
-            axis.scatter(h.flatten(), s.flatten(), v.flatten(), facecolors = pixelColors, marker = ".")
-            axis.set_xlabel("Hue")
-            axis.set_ylabel("Saturation")
-            axis.set_zlabel("Value")
+        pixelColors = frame.reshape((np.shape(frame)[0]*np.shape(frame)[1], 3))
+        norm = colors.Normalize(vmin=-1.,vmax=1.)
+        norm.autoscale(pixelColors)
+        pixelColors = norm(pixelColors).tolist()
+        hsvFrame = cv2.cvtColor(frame, cv2.COLOR_RGB2HSV)
+        h, s, v = cv2.split(hsvFrame)
+        fig = plt.figure()
 
-            plt.show()
+        axis = fig.add_subplot(1, 1, 1, projection = "3d")
+        axis.scatter(h.flatten(), s.flatten(), v.flatten(), facecolors = pixelColors, marker = ".")
+        axis.set_xlabel("Hue")
+        axis.set_ylabel("Saturation")
+        axis.set_zlabel("Value")
+
+        plt.show()
 
     def updateMask(self, frame):
         isMaskFrameRead, maskFrame = self.defaultVideoCapture.getFrame(self.BRIGHT_HSV)
-        if isMaskFrameRead:
-            lowHue = self.lowHueSlider.getValue()
-            highHue = self.highHueSlider.getValue()
-            lowSaturation = self.lowSaturationSlider.getValue()
-            highSaturation = self.highSaturationSlider.getValue()
-            lowValue = self.lowValueSlider.getValue()
-            highValue = self.highValueSlider.getValue()
 
-            lower_hsv = np.array([lowHue, lowSaturation, lowValue])
-            higher_hsv = np.array([highHue, highSaturation, highValue])
+        lowHue = self.lowHueSlider.getValue()
+        highHue = self.highHueSlider.getValue()
+        lowSaturation = self.lowSaturationSlider.getValue()
+        highSaturation = self.highSaturationSlider.getValue()
+        lowValue = self.lowValueSlider.getValue()
+        highValue = self.highValueSlider.getValue()
 
-            hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-            mask = cv2.inRange(hsv, lower_hsv, higher_hsv)
+        lower_hsv = np.array([lowHue, lowSaturation, lowValue])
+        higher_hsv = np.array([highHue, highSaturation, highValue])
 
-            frame = cv2.bitwise_and(frame, frame, mask = mask)
+        hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+        mask = cv2.inRange(hsv, lower_hsv, higher_hsv)
 
-            #contour features
-            self.drawContours(frame)
+        frame = cv2.bitwise_and(frame, frame, mask = mask)
 
-            self.maskCanvasPhoto = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
-            self.maskCanvas.createImage(0, 0, self.maskCanvasPhoto, tk.NW)
+        #contour features
+        self.drawContours(frame)
+
+        self.maskCanvasPhoto = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
+        self.maskCanvas.createImage(0, 0, self.maskCanvasPhoto, tk.NW)
 
     def drawContours(self, frame):
         grayImg = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
