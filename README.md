@@ -35,6 +35,11 @@ $ pip install pillow
 $ pip install numpy
 ```
 
+- Install matplotlib
+```
+$ pip install matplotlib
+```
+
 ## How to run
 - Run
 ```
