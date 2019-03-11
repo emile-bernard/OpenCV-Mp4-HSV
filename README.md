@@ -7,6 +7,10 @@ This project contains a basic python script to run opencv-python with an HSV mas
 
 ## How it work's
 
+HSV is a color space that attempts to represent colors the way humans perceive it. It stores color information in a cylindrical representation of RGB color points.
+
+![Doc1](./documentation/Doc1.PNG?raw=true "Doc1")
+
 The HSV color space components:
   H – Hue ( Dominant Wavelength ).
   S – Saturation ( Purity / shades of the color ).
